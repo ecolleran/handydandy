@@ -3,6 +3,9 @@ Emily Colleran's course project for Computer Vision (CSE 40535)
 
 Hand Gesture Recognition Program
 
+## Branching:
+Practical assignments are in branches as labled. Course proect is in the main branch. 
+
 ## Hand Gesture Recognition: High-Level Solution
 
 #### Problem Definition
