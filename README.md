@@ -3,6 +3,12 @@ Emily Colleran's course project for Computer Vision (CSE 40535)
 
 Hand Gesture Recognition Program
 
+## Part 5:
+
+### Advanced Features:
+Based off of reccomndations from Part 4, I replaced hand-crafted features with deep features extracted from MobileNetV2, a pretrained CNN on ImageNet. The feature vector (1280 dimensions) was passed into the SVM classifier increasing the validation accuracy to 100% across all three gestures. This upgrade significantly improved model preformance and showed the power of transfer learning in computer vision.
+
+
 ## Part 4:
 
 ### Classifier Justification: 
