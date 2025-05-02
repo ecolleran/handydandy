@@ -16,15 +16,15 @@ def preprocess_frame(frame):
 
 def segment_hand(image):
     """Segment hand using HSV skin detection and adaptive thresholding."""
-    # Convert to HSV for skin detection
+    #Convert to HSV for skin detection
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    # HSV Skin color range (tune if necessary)
+    #HSV Skin color range
     lower_skin = np.array([0, 20, 70], dtype=np.uint8)
     upper_skin = np.array([30, 255, 255], dtype=np.uint8)
     skin_mask = cv2.inRange(hsv, lower_skin, upper_skin)
 
-    # Adaptive Thresholding to handle varying lighting conditions
+    #Adaptive Thresholding to handle lighting
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     adaptive_mask = cv2.adaptiveThreshold(
         gray, 255,
@@ -32,16 +32,16 @@ def segment_hand(image):
         cv2.THRESH_BINARY_INV, 11, 2
     )
 
-    # Combine both masks to robustly isolate the hand
+    #Combine masks
     combined_mask = cv2.bitwise_and(skin_mask, adaptive_mask)
 
-    # Morphological operations (noise cleanup)
+    #Morphological operations (noise cleanup)
     kernel = np.ones((5, 5), np.uint8)
     mask = cv2.erode(combined_mask, kernel, iterations=1)
     mask = cv2.dilate(mask, kernel, iterations=2)
     mask = cv2.medianBlur(mask, 5)
 
-    # Extract largest contour (hand area)
+    #Extract largest contour(hand)
     contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     if contours:
         largest_contour = max(contours, key=cv2.contourArea)

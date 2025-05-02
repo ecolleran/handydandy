@@ -6,7 +6,7 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report
 
 from preprocess import preprocess_image, segment_hand
-from features import extract_features
+from deep_features import extract_deep_features
 
 def load_dataset(data_dir):
     X, y = [], []
@@ -16,9 +16,9 @@ def load_dataset(data_dir):
             continue
         for filename in os.listdir(label_path):
             filepath = os.path.join(label_path, filename)
-            _, hsv = preprocess_image(filepath)
-            mask = segment_hand(hsv)
-            features = extract_features(mask)
+            resized, blurred = preprocess_image(filepath)
+            mask = segment_hand(blurred)
+            features = extract_deep_features(resized, mask)
             X.append(features)
             y.append(label_folder)
     return np.array(X), np.array(y)
@@ -42,7 +42,7 @@ def train_and_evaluate(data_path="data"):
     print(f"Validation Accuracy: {val_acc:.2f}%")
     print("Classification Report:\n", classification_report(y_val, y_val_pred))
 
-    # Save model
+    #Save model
     joblib.dump(clf, "models/svm_model.pkl")
 
 
