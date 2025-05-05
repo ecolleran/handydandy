@@ -3,11 +3,76 @@ Emily Colleran's course project for Computer Vision (CSE 40535)
 
 Hand Gesture Recognition Program
 
+## Branching:
+Practical assignments and homeworks are in branches as labled. Course project is in the main branch. 
+
 ## Part 5:
 
-### Advanced Features:
+### Advanced Features & Extraction:
 Based off of reccomndations from Part 4, I replaced hand-crafted features with deep features extracted from MobileNetV2, a pretrained CNN on ImageNet. The feature vector (1280 dimensions) was passed into the SVM classifier increasing the validation accuracy to 100% across all three gestures. This upgrade significantly improved model preformance and showed the power of transfer learning in computer vision.
 
+### Test Set Description
+For the final evaluation, I used a test subset from the original dataset, with:
+- **Total Samples:** 27 images (9 per gesture)
+- **Gestures (classes):** L, Peace, Stop!
+- **Conditions:**
+  - Different subject hands from training/validation
+  - Slightly altered lighting and backgrounds
+
+These differences ensured the model was evaluated on unseen data with real-world variance.
+
+### Final Classification Results (Test Set)
+```
+Accuracy: 100.00%
+Classification Report:
+               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00         9
+           1       1.00      1.00      1.00         9
+           2       1.00      1.00      1.00         9
+
+    accuracy                           1.00        27
+   macro avg       1.00      1.00      1.00        27
+weighted avg       1.00      1.00      1.00        27
+```
+
+### What Went Wrong / Potential Improvements
+Although accuracy on the test set was perfect, this is likely due to a small number of classes and careful preprocessing. Future improvements could include:
+- Using more diverse gesture classes or uploading more images during the training and validation phases. 
+- Testing on real webcam frames with varying skin tones and lighting.
+- Switching from MobileNetV2 to a gesture-specific CNN architecture
+- Augmenting training data with flipped/mirrored gestures to improve generalization, so that there is no different between the left and right hands.
+
+### Final Demo
+A real-time demo of HandyDandy can be run via `webcam.py`. The webcam feed lables gestures predictions on live input. To run:
+```bash
+python3 webcam.py
+```
+3 gesture classes:
+- ✋ Stop
+- 👍 Thumbs Up
+- ✌️ Peace
+
+### Instructions to Run Final Code
+1. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+2. Run training (optional if `models/svm_model.pkl` is present):
+```bash
+python3 training.py
+```
+3. Run a single image test:
+```bash
+python3 final_test.py
+```
+4. Run the real-time webcam test:
+```bash
+python3 webcam.py
+```
+
+.
+---
 
 ## Part 4:
 
@@ -39,11 +104,74 @@ Looking ahead I could make a few improvements. I could augment the dataset with 
 The small improvement to be implemented before final testing is to integrate finger count detection as an additional feature. Given that Stop/Palm consistently performs well likely due to five extended fingers, explicitly counting the number of fingers could enhance the model’s ability to differentiate between gestures with fewer extended fingers(e.g., L with two fingers vs. Thumbs Up with one). This improvement is computationally lightweight, aligns with the current contour-based pipeline, and directly addresses the overlapping feature issue between L and Thumbs Up.
 
 The current solution provides a functionally complete hand gesture recognition system that achieves ≥1 FPS real-time processing and robust classification of three gesture classes using webcam input. While Stop/Palm classification is highly accurate, targeted improvements in segmentation refinement and feature enhancement are expected to boost the performance of the L and Thumbs Up classes, making the system more reliable for practical deployment.
+---
 
-------------
+## Part 3:
 
-## Branching:
-Practical assignments are in branches as labled. Course proect is in the main branch. 
+### Methods Applied: 
+
+(Originally, this was all in 1 file (handydandy.py), but functions were seperated into different files starting in part 4 to help improve project orginization. The code remained the same.)
+
+1. **Preprocessing:**
+   - Resize all images to 300x300 for uniformity
+   - Gaussian blurring to reduce noise
+   - HSV color space conversion for robust skin color segmentation
+
+2. **Segmentation:**
+   - Use HSV skin color thresholding
+   - Morphological operations (dilation + erosion) to clean up the mask
+   - Largest contour selection to isolate the hand
+
+3. **Feature Extraction:**
+   - Hu Moments (7 features)
+   - Convex Hull and Defects (1 feature)
+   - Contour area (1 feature)
+   - Aspect ratio (1 feature)
+   
+**Total Features:** 10-D vector per sample
+
+### Why These Methods?
+- **HSV segmentation** is robust to lighting variation, which is a common issue with webcam captures.
+- **Hu Moments** are scale and rotation invariant whcih is ideal for capturing shape-based features.
+- **Convex Hull/Defects** are used for detecting fingers and the palm contour.
+- **Aspect ratio and area** provide geometric descriptors to separate similar shapes and especially helpful when isolating
+fingers in each gesture.
+
+### Sample Results:
+- ![](4-color.png) — displays original image
+- Processed mask output shows the isolated hand.
+- Contours and convex hull drawn to visualize feature regions
+.
+---
+
+## Part 2:
+
+For my project, I plan to use the publicly available dataset released by the University of Padova that was recommended by Professor Scheirer.
+
+**Dataset:** Dataset of Leap Motion and Microsoft Kinect hand acquisitions  
+**Source:** [ICIP 2014 Paper](https://ieeexplore.ieee.org/document/7025201) by G. Marin, F. Dominio, P. Zanuttigh  
+**Download Info:** [Department of Information Engineering - University of Padova (2014)](https://lttm.dei.unipd.it//downloads/gesture/)
+
+**Dataset Details:**
+- **Subjects:** 14 individuals
+- **Gestures:** 10 unique gestures (each performed 10 times)
+- **Total Samples:** 1400 hand gesture instances
+- **Modalities:** Kinect RGB/depth data and Leap Motion skeletal data
+
+**Training/Validation Split:**
+- The Hand gesture recognition proejct description suggests 20 samples per gesture and with 140 samples (10 pictures from 14 individuals each) per gesture in the set it will be easy to seperate into the 60/20/20 training/validation and testing splits as needed. 
+
+**Differences in Partitions:**
+- The set includes samples from a mixture of subjects under consistent lighting conditions.
+- The validation set has some minor lighting changes and varied subject orientation.
+
+**Sample Characteristics:**
+- Resolution: 640x480 RGB images (Kinect)
+- Sensor: Microsoft Kinect v1
+- Lighting: Natural indoor and low-light conditions
+- Format: .png RGB images
+.
+--- 
 
 ## Hand Gesture Recognition: High-Level Solution
 
@@ -68,3 +196,5 @@ As stated in the project description the dataset will include at least 20 traini
 - Review existing datasets and determine feasibility of self-collection.
 - Experiment with feature extraction methods and evaluate their effectiveness.
 - Begin implementing classification models and assess their real-time performance.
+.
+---
