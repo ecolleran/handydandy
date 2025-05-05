@@ -138,7 +138,7 @@ The current solution provides a functionally complete hand gesture recognition s
 fingers in each gesture.
 
 ### Sample Results:
-- ![](4-color.png) — displays original image
+- displays original image
 - Processed mask output shows the isolated hand.
 - Contours and convex hull drawn to visualize feature regions
 .
