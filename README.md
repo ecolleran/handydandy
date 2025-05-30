@@ -56,19 +56,23 @@ python3 webcam.py
 ### Instructions to Run Final Code
 1. Install dependencies:
 ```bash
-pip install -r requirements.txt
+conda env update --file environment.yml
 ```
-2. Run training (optional if `models/svm_model.pkl` is present):
+2. Run environment:
 ```bash
-python3 training.py
+conda activate cv1p1
 ```
-3. Run a single image test:
+3. Run training (optional if `models/svm_model.pkl` is present):
 ```bash
-python3 final_test.py
+python training.py
 ```
-4. Run the real-time webcam test:
+4. Run a single image test:
 ```bash
-python3 webcam.py
+python final_test.py
+```
+5. Run the real-time webcam test:
+```bash
+python webcam.py
 ```
 
 .
