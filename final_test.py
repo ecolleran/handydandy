@@ -7,7 +7,7 @@ from deep_features import extract_deep_features
 #Load model
 model = joblib.load("models/svm_model.pkl")
 
-#Label map
+#Map for labels
 gesture_labels = {
     "0": "L",
     "1": "Peace",

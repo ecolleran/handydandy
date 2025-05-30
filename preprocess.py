@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 def preprocess_image(image_path):
-    """Load, resize, and blur image from file path for training."""
+    """Load, resize, & blur image from file path for training."""
     image = cv2.imread(image_path)
     resized = cv2.resize(image, (300, 300))
     blurred = cv2.GaussianBlur(resized, (5, 5), 0)

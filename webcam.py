@@ -1,13 +1,15 @@
 import cv2
 import joblib
 import numpy as np
+
+#imports from other project files
 from preprocess import preprocess_frame, segment_hand
 from deep_features import extract_deep_features
 
 #Load classifier
 model = joblib.load("models/svm_model.pkl")
 
-# Map class labels to gesture names
+#Map for gesture names
 gesture_labels = {
     "0": "L",
     "1": "Peace",

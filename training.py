@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report
 
+#imports from other project files
 from preprocess import preprocess_image, segment_hand
 from deep_features import extract_deep_features
 

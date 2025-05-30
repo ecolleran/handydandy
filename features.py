@@ -4,7 +4,7 @@ import numpy as np
 def extract_features(mask):
     contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     if not contours:
-        print("No contours found. Returning zeros.")
+        print("No contours found.")
         return np.zeros(12)
 
     largest_contour = max(contours, key=cv2.contourArea)
